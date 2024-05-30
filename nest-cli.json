@@ -2,7 +2,19 @@
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
   "sourceRoot": "src",
+  "root": "src",
   "compilerOptions": {
-    "deleteOutDir": true
+    "deleteOutDir": true,
+    "assets": [
+      {
+        "include": "**/model.conf",
+        "outDir": "dist/src",
+        "watchAssets": true
+      },
+      {
+        "include": "**/*.csv",
+        "outDir": "dist/src"
+      }
+    ]
   }
 }

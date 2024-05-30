@@ -1,5 +1,23 @@
-Dockerfile
+#ignoring dirs
+./node_modules
+./dist
+./.next
+./.nuxt
+
+#ignoring dotfiles
 .dockerignore
-node_modules
-npm-debug.log
-dist
+#.eslintrc.js
+.env.sample
+.env
+#.prettierrc
+.gitignore
+.git
+
+#ignoring markdown files
+*.md
+
+*ockerfile*
+*docker-compose*
+
+./.gitlab-ci.yml
+./.gitlab

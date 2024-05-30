@@ -1,34 +1,84 @@
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { INestApplication, ValidationPipe } from '@nestjs/common';
+
+import { printInfo, printRoutes, printLogo, LoggerModule } from './core/logger';
+
+import { DataSource } from 'typeorm';
+import cookieParser from 'cookie-parser';
+import express from 'express';
+import packageJson from '../package.json';
+
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+import {
+  SWAGGER_API_CURRENT_VERSION,
+  SWAGGER_API_DESCRIPTION,
+  SWAGGER_API_NAME,
+  SWAGGER_API_ROOT,
+} from './common/constants';
+
 import { AppModule } from './app.module';
-import { NacosServer } from './config';
+
+export const SessionAppDataSource = new DataSource({
+  type: 'postgres',
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  username: process.env.DB_USERNAME,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_DATABASE,
+  schema: process.env.DB_SCHEMA,
+  synchronize: true,
+  entities: [__dirname + '/../src/**/*.entity{.ts,.js}'],
+});
 
 async function bootstrap() {
-  await NacosServer();
-
-  console.log('Nacos server: ', process.env.NACOS_SERVERADDR);
-  console.log('Nacos namespace: ', process.env.NACOS_NAMESPACE);
-  console.log('Nacos key: ', process.env.NACOS_IDENTITYKEY);
-  console.log('Nacos secret: ', process.env.NACOS_IDENTITYVALUE);
-
-  const app = await NestFactory.create(AppModule);
-
-  app.setGlobalPrefix('api');
-
-  app.enableCors();
-
-  const config = new DocumentBuilder()
-    .setTitle('Globals documentation')
-    .setDescription('The globals API description')
-    .setVersion('1.0')
-    .build();
-
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/v1/docs', app, document, {
-    customSiteTitle: 'Global Documentation',
+  const app = await NestFactory.create(AppModule, {
+    logger: ['error', 'warn'],
   });
 
-  await app.listen(process.env.NS00_PORT || 3103);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+  await LoggerModule.initialize(app);
+  // swagger
+  if (process.env.NODE_ENV === 'development') {
+    createSwagger(app);
+  }
+
+  app.use(cookieParser());
+  app.use(express.static('public'));
+  app.setGlobalPrefix(process.env.PATH_SUBDOMAIN || 'api');
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+
+  await app.listen(process.env.PORT || 3000);
+
+  printRoutes(app);
+  printLogo();
+  printInfo({
+    env: String(process.env.NODE_ENV),
+    name: packageJson.name,
+    port: process.env.PORT || '3000',
+    version: packageJson.version,
+  });
 }
+
+function createSwagger(app: INestApplication) {
+  const options = new DocumentBuilder()
+    .setTitle(SWAGGER_API_NAME)
+    .setDescription(SWAGGER_API_DESCRIPTION)
+    .setVersion(SWAGGER_API_CURRENT_VERSION)
+    .addServer(`http://localhost:${process.env.PORT}/api/`)
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, options);
+  SwaggerModule.setup(SWAGGER_API_ROOT, app, document);
+}
+
 bootstrap();
