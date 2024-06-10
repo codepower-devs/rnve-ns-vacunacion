@@ -4,6 +4,7 @@ import { ActualizarParametroDto, CrearParametroDto } from '../dto';
 import { Parametro } from '../entity';
 import { ParametroEstado } from '../constant';
 import { PaginacionQueryDto } from '@/common/dto/paginacion-query.dto';
+import { RpcException } from '@nestjs/microservices';
 
 @Injectable()
 export class ParametroRepository {
@@ -17,18 +18,24 @@ export class ParametroRepository {
       .getOne();
   }
 
-  async actualizar(
-    id: string,
-    parametroDto: ActualizarParametroDto,
-    usuarioAuditoria: string,
-  ) {
-    const datosActualizar = new Parametro({
-      ...parametroDto,
-      usuarioModificacion: usuarioAuditoria,
-    });
-    return await this.dataSource
-      .getRepository(Parametro)
-      .update(id, datosActualizar);
+  async actualizar(id: string, parametroDto: ActualizarParametroDto) {
+    console.log(parametroDto);
+
+    try {
+      const datosActualizar = new Parametro({
+        ...parametroDto,
+      });
+      return await this.dataSource
+        .getRepository(Parametro)
+        .update(id, datosActualizar);
+    } catch (error) {
+      console.log(error);
+      throw new RpcException({
+        statusCode: 400,
+        error: 'Bad Request',
+        message: error.message,
+      });
+    }
   }
 
   async listar(paginacionQueryDto: PaginacionQueryDto) {
@@ -108,15 +115,16 @@ export class ParametroRepository {
       .findOne({ where: { codigo: codigo } });
   }
 
-  async crear(parametroDto: CrearParametroDto, usuarioAuditoria: string) {
-    const { codigo, nombre, grupo, descripcion } = parametroDto;
+  async crear(parametroDto: CrearParametroDto) {
+    const { codigo, nombre, grupo, descripcion, usuarioCreacion } =
+      parametroDto;
 
     const parametro = new Parametro();
     parametro.codigo = codigo;
     parametro.nombre = nombre;
     parametro.grupo = grupo;
     parametro.descripcion = descripcion;
-    parametro.usuarioCreacion = usuarioAuditoria;
+    parametro.usuarioCreacion = usuarioCreacion;
 
     return await this.dataSource.getRepository(Parametro).save(parametro);
   }

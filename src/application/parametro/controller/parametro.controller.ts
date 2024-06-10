@@ -1,122 +1,61 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Param,
-  Patch,
-  Post,
-  Query,
-  Req,
-} from '@nestjs/common';
-import { ParametroService } from '../service';
-import { PaginacionQueryDto } from '@/common/dto/paginacion-query.dto';
 import { BaseController } from '@/common/base';
+import { PaginacionQueryDto } from '@/common/dto/paginacion-query.dto';
 import { ParamIdDto } from '@/common/dto/params-id.dto';
-import { Request } from 'express';
+import { Controller } from '@nestjs/common';
+import { MessagePattern, Payload } from '@nestjs/microservices';
 import {
   ActualizarParametroDto,
   CrearParametroDto,
   ParamGrupoDto,
 } from '../dto';
-import { ApiBody, ApiOperation, ApiProperty, ApiTags } from '@nestjs/swagger';
+import { ParametroService } from '../service';
 
-@ApiTags('Parámetros')
 @Controller('parametros')
 export class ParametroController extends BaseController {
   constructor(private parametroServicio: ParametroService) {
     super();
   }
 
-  @ApiOperation({ summary: 'API para obtener el listado de parámetros' })
-  @Get()
-  async listar(@Query() paginacionQueryDto: PaginacionQueryDto) {
+  @MessagePattern({ cmd: 'listar-parametros' })
+  async listar(@Payload() paginacionQueryDto: PaginacionQueryDto) {
     const result = await this.parametroServicio.listar(paginacionQueryDto);
     return this.successListRows(result);
   }
 
-  @ApiOperation({
-    summary: 'API para obtener el listado de parámetros por grupo',
-  })
-  @ApiProperty({
-    type: ParamGrupoDto,
-  })
-  @Get('/:grupo/listado')
-  async listarPorGrupo(@Param() params: ParamGrupoDto) {
+  @MessagePattern({ cmd: 'listar-parametros-por-grupo' })
+  async listarPorGrupo(@Payload() params: ParamGrupoDto) {
     const { grupo } = params;
     const result = await this.parametroServicio.listarPorGrupo(grupo);
     return this.successList(result);
   }
 
-  @ApiOperation({ summary: 'API para crear un nuevo parámetro' })
-  @ApiBody({
-    type: CrearParametroDto,
-    description:
-      'Esta API permite crear un nuevo parámetro utilizando los datos proporcionados en el cuerpo de la solicitud.',
-    required: true,
-  })
-  @Post()
-  async crear(@Req() req: Request, @Body() parametroDto: CrearParametroDto) {
-    const usuarioAuditoria = this.getUser(req);
-    const result = await this.parametroServicio.crear(
-      parametroDto,
-      usuarioAuditoria,
-    );
+  @MessagePattern({ cmd: 'crear-parametro' })
+  async crear(@Payload() parametroDto: CrearParametroDto) {
+    const result = await this.parametroServicio.crear(parametroDto);
     return this.successCreate(result);
   }
 
-  @ApiOperation({ summary: 'API para actualizar un parámetro' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @ApiBody({
-    type: ActualizarParametroDto,
-    description:
-      'Esta API permite actualizar un parámetro existente utilizando los atributos proporcionados en el cuerpo de la solicitud.',
-    required: true,
-  })
-  @Patch(':id')
-  async actualizar(
-    @Param() params: ParamIdDto,
-    @Req() req: Request,
-    @Body() parametroDto: ActualizarParametroDto,
-  ) {
-    const { id: idParametro } = params;
-    const usuarioAuditoria = this.getUser(req);
+  @MessagePattern({ cmd: 'actualizar-parametro' })
+  async actualizar(@Payload() parametroDto: ActualizarParametroDto) {
+    const { id } = parametroDto;
     const result = await this.parametroServicio.actualizarDatos(
-      idParametro,
+      id,
       parametroDto,
-      usuarioAuditoria,
     );
     return this.successUpdate(result);
   }
 
-  @ApiOperation({ summary: 'API para activar un parámetro' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch('/:id/activacion')
-  async activar(@Req() req: Request, @Param() params: ParamIdDto) {
+  @MessagePattern({ cmd: 'activar-parametro' })
+  async activar(@Payload() params: ParamIdDto) {
     const { id: idParametro } = params;
-    const usuarioAuditoria = this.getUser(req);
-    const result = await this.parametroServicio.activar(
-      idParametro,
-      usuarioAuditoria,
-    );
+    const result = await this.parametroServicio.activar(idParametro);
     return this.successUpdate(result);
   }
 
-  @ApiOperation({ summary: 'API para inactivar un parámetro' })
-  @ApiProperty({
-    type: ParamIdDto,
-  })
-  @Patch('/:id/inactivacion')
-  async inactivar(@Req() req: Request, @Param() params: ParamIdDto) {
+  @MessagePattern({ cmd: 'inactivar-parametro' })
+  async inactivar(@Payload() params: ParamIdDto) {
     const { id: idParametro } = params;
-    const usuarioAuditoria = this.getUser(req);
-    const result = await this.parametroServicio.inactivar(
-      idParametro,
-      usuarioAuditoria,
-    );
+    const result = await this.parametroServicio.inactivar(idParametro);
     return this.successUpdate(result);
   }
 }

@@ -6,9 +6,9 @@ import {
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import dotenv from 'dotenv';
 import { AuditoriaEntity } from '@/common/entity/auditoria.entity';
 import { ParametroEstado } from '../constant';
-import dotenv from 'dotenv';
 
 dotenv.config();
 @Check(UtilService.buildStatusCheck(ParametroEstado))

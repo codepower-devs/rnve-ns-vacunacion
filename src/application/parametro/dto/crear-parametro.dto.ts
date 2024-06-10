@@ -1,30 +1,25 @@
-import { IsNotEmpty, IsOptional } from '@/common/validation'
-import { ApiProperty } from '@nestjs/swagger'
+import { IsNotEmpty, IsOptional } from '@/common/validation';
 
 export class CrearParametroDto {
-  @ApiProperty({ example: 'TD-CI' })
   @IsNotEmpty()
-  codigo: string
+  codigo: string;
 
-  @ApiProperty({ example: 'Cédula de identidad' })
   @IsNotEmpty()
-  nombre: string
+  nombre: string;
 
-  @ApiProperty({ example: 'CD' })
   @IsNotEmpty()
-  grupo: string
+  grupo: string;
 
-  @ApiProperty({ example: 'Cédula de identidad' })
   @IsNotEmpty()
-  descripcion: string
+  descripcion: string;
 
-  @ApiProperty({ example: 'ACTIVO' })
   @IsOptional()
-  estado?: string
+  estado?: string;
+
+  usuarioCreacion: string;
 }
 
 export class RespuestaCrearParametroDto {
-  @ApiProperty({ example: '1' })
   @IsNotEmpty()
-  id: string
+  id: string;
 }
