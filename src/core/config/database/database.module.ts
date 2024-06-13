@@ -17,7 +17,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         database: configService.get('DB_DATABASE'),
         entities: [__dirname + '../../../../**/*.entity{.ts,.js}'],
         keepConnectionAlive: true,
-        synchronize: false,
+        synchronize: true,
         logger: new SQLLogger({
           logger: LoggerService.getInstance(),
           level: {
