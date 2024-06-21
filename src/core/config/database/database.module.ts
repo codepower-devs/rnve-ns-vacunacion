@@ -18,6 +18,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         entities: [__dirname + '../../../../**/*.entity{.ts,.js}'],
         keepConnectionAlive: true,
         synchronize: true,
+        autoLoadEntities: true,
         logger: new SQLLogger({
           logger: LoggerService.getInstance(),
           level: {

@@ -1,5 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from '@/common/validation';
+import { Max, Min, Validate } from 'class-validator';
+import { isEdadinicialMenorigualQueEdadfinal } from '../validations/is-edadinicial-menor-igual-edadfinal.validator';
 
 export class CrearGrupoetareoDto {
   @ApiProperty({ example: 'Descripción' })
@@ -17,10 +19,14 @@ export class CrearGrupoetareoDto {
 
   @ApiProperty({ example: '1' })
   @IsNumber()
+  @Min(1)
+  @Validate(isEdadinicialMenorigualQueEdadfinal)
   edadInicial: number;
 
   @ApiProperty({ example: '90' })
   @IsNumber()
+  @Min(1)
+  @Max(150)
   edadFinal: number;
 
   @ApiProperty({ example: '33' })

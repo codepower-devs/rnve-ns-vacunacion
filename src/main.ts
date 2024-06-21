@@ -26,6 +26,12 @@ async function bootstrap() {
     logger: ['error', 'warn'],
   });
 
+  app.enableCors({
+    origin: true,
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    credentials: true,
+  });
+  
   const options = new DocumentBuilder()
     .setTitle('Vacunacion')
     .setDescription('')
