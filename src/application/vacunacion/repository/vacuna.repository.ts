@@ -106,6 +106,7 @@ export class VacunaRepository {
   async actualizar(id: string, vacunaDto: ActualizarVacunaDto) {
     const datosActualizar = {
       ...vacunaDto,
+      id: +id,
       updated_at: new Date(),
       usuarioId: 100,
     };

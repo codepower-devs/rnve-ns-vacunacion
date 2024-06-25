@@ -49,7 +49,7 @@ export class EsquemaService extends BaseService {
     }
 
     try {
-      const esquemaDto = new CrearEsquemaDto();
+      const esquemaDto = new ActualizarEsquemaDto();
       esquemaDto.estadoId = 1;
       esquemaDto.vacunaId = esquema.vacuna.id;
       //console.log(esquemaDto);
