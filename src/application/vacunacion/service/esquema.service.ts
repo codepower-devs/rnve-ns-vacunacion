@@ -28,10 +28,13 @@ export class EsquemaService extends BaseService {
   }
 
   async actualizar(id: string, esquemaDto: ActualizarEsquemaDto) {
+    console.log(id);
     const esquema = await this.esquemaRepository.buscarPorId(id);
+    console.log(esquema);
     if (!esquema) {
       throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND);
     }
+
     try {
       //console.log(esquemaDto);
       await this.esquemaRepository.actualizar(id, esquemaDto);
@@ -51,8 +54,8 @@ export class EsquemaService extends BaseService {
     try {
       const esquemaDto = new ActualizarEsquemaDto();
       esquemaDto.estadoId = 1;
+      esquemaDto.id = idEsquema;
       esquemaDto.vacunaId = esquema.vacuna.id;
-      //console.log(esquemaDto);
       await this.esquemaRepository.actualizar(idEsquema, esquemaDto);
       return { id: idEsquema, estado_id: 1 };
     } catch (error) {
@@ -70,6 +73,7 @@ export class EsquemaService extends BaseService {
     try {
       const esquemaDto = new ActualizarEsquemaDto();
       esquemaDto.estadoId = 2;
+      esquemaDto.id = idEsquema;
       esquemaDto.vacunaId = esquema.vacuna.id;
       //console.log(esquemaDto);
       await this.esquemaRepository.actualizar(idEsquema, esquemaDto);

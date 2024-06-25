@@ -139,10 +139,10 @@ export class EsquemaRepository {
 
   async actualizar(id: string, esquemaDto: ActualizarEsquemaDto) {
     const vacuna = new Vacuna();
-    vacuna.id = +id;
+    vacuna.id = esquemaDto.vacunaId;
     const datosActualizar = {
       ...esquemaDto,
-      id: +id,
+      id: +esquemaDto.id,
       updated_at: new Date(),
       usuarioId: 100,
       vacuna: vacuna,

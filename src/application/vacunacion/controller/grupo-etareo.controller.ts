@@ -13,13 +13,13 @@ export class GrupoetareoController extends BaseController {
     super();
   }
 
-  @MessagePattern({ cmd: 'listar_grupo_etareo' })
+  @MessagePattern({ cmd: 'listar-grupo-etareo' })
   async listar() {
     const result = await this.grupoetareoService.listar();
     return this.successList(result);
   }
 
-  @MessagePattern({ cmd: 'listar_grupo_etareo_paginacion' })
+  @MessagePattern({ cmd: 'listar-grupo-etareo-paginacion' })
   @Get('todos')
   async listarTodos(@Payload() paginacionQueryDto: PaginacionQueryDto) {
     const result =
@@ -27,13 +27,13 @@ export class GrupoetareoController extends BaseController {
     return this.successListRows(result);
   }
 
-  @MessagePattern({ cmd: 'crear_grupo_etareo' })
+  @MessagePattern({ cmd: 'crear-grupo-etareo' })
   async crear(@Payload() grupoEtareoDto: CrearGrupoetareoDto) {
     const result = await this.grupoetareoService.crear(grupoEtareoDto);
     return this.successCreate(result);
   }
 
-  @MessagePattern({ cmd: 'actualizar_grupo_etareo' })
+  @MessagePattern({ cmd: 'actualizar-grupo-etareo' })
   async actualizar(@Payload() grupoEtareoDto: ActualizarGrupoetareoDto) {
     const result = await this.grupoetareoService.actualizar(
       grupoEtareoDto.id!,
@@ -42,14 +42,14 @@ export class GrupoetareoController extends BaseController {
     return this.successUpdate(result);
   }
 
-  @MessagePattern({ cmd: 'activar_grupo_etareo' })
+  @MessagePattern({ cmd: 'activar-grupo-etareo' })
   async activar(@Payload() params: ParamIdDto) {
     const { id: idGrupoEtareo } = params;
     const result = await this.grupoetareoService.activar(idGrupoEtareo);
     return result;
   }
 
-  @MessagePattern({ cmd: 'inactivar_grupo_etareo' })
+  @MessagePattern({ cmd: 'inactivar-grupo-etareo' })
   async inactivar(@Payload() params: ParamIdDto) {
     const { id: idGrupoEtareo } = params;
     const result = await this.grupoetareoService.inactivar(idGrupoEtareo);
