@@ -1,5 +1,5 @@
 # Base image
-FROM node:18-alpine
+FROM node:21-alpine
 
 RUN node -v
 
@@ -25,4 +25,9 @@ RUN npm run build
 # EXPOSE 3000
 
 # Start the server using the production build
-CMD ["npm", "run", "start:qas"]
+CMD ["npm", "run", "start:dev"]
+
+
+# ms-esavis: 1.0.0 prd
+# ms-esavis: 2.0.0 qas
+# ms-esavis: 3.0.0 dev

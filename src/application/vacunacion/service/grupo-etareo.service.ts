@@ -45,7 +45,7 @@ export class GrupoetareoService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND);
     }
 
-    const grupoEtareoDto = new CrearGrupoetareoDto();
+    const grupoEtareoDto = new ActualizarGrupoetareoDto();
     grupoEtareoDto.estadoId = 1;
 
     await this.grupoetareoRepository.actualizar(idGrupoEtareo, grupoEtareoDto);
@@ -59,7 +59,7 @@ export class GrupoetareoService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND);
     }
 
-    const grupoEtareoDto = new CrearGrupoetareoDto();
+    const grupoEtareoDto = new ActualizarGrupoetareoDto();
     grupoEtareoDto.estadoId = 2;
 
     await this.grupoetareoRepository.actualizar(idGrupoEtareo, grupoEtareoDto);

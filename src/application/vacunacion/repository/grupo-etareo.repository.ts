@@ -137,6 +137,7 @@ export class GrupoetareoRepository {
   async actualizar(id: string, grupoEtareoDto: ActualizarGrupoetareoDto) {
     const datosActualizar = {
       ...grupoEtareoDto,
+      id: +id,
       updated_at: new Date(),
       usuarioId: 100,
     };

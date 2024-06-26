@@ -1,9 +1,9 @@
-import { Brackets, DataSource, EntityManager } from 'typeorm';
-import { Injectable } from '@nestjs/common';
-import { Esquema } from '../entity/esquema.entity';
-import { CrearEsquemaDto } from '../dto/crear-esquema.dto';
-import { ActualizarEsquemaDto } from '../dto/actualizar-esquema.dto';
 import { PaginacionQueryDto } from '@/common/dto/paginacion-query.dto';
+import { Injectable } from '@nestjs/common';
+import { Brackets, DataSource } from 'typeorm';
+import { ActualizarEsquemaDto } from '../dto/actualizar-esquema.dto';
+import { CrearEsquemaDto } from '../dto/crear-esquema.dto';
+import { Esquema } from '../entity/esquema.entity';
 import { Vacuna } from '../entity/vacuna.entity';
 
 @Injectable()
@@ -140,9 +140,9 @@ export class EsquemaRepository {
   async actualizar(id: string, esquemaDto: ActualizarEsquemaDto) {
     const vacuna = new Vacuna();
     vacuna.id = esquemaDto.vacunaId;
-
     const datosActualizar = {
       ...esquemaDto,
+      id: +esquemaDto.id,
       updated_at: new Date(),
       usuarioId: 100,
       vacuna: vacuna,
