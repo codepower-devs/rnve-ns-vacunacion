@@ -17,7 +17,7 @@ import { LoggerMiddleware } from './common/middlewares';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: [`.env.${process.env.NODE_ENV}`], // .env.development , .env.production , .env.quality
+      // envFilePath: [`.env.${process.env.NODE_ENV}`], // .env.development , .env.production , .env.quality
     }),
     ScheduleModule.forRoot(),
     LoggerModule.forRoot({
