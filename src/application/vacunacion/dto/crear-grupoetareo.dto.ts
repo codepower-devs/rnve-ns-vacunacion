@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsNotEmpty, IsNumber, IsString } from '@/common/validation';
+import { ApiProperty } from '@nestjs/swagger';
 import { Max, Min, Validate } from 'class-validator';
 import { isEdadinicialMenorigualQueEdadfinal } from '../validations/is-edadinicial-menor-igual-edadfinal.validator';
 

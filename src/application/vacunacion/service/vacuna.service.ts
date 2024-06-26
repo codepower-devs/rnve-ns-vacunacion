@@ -43,7 +43,7 @@ export class VacunaService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND);
     }
 
-    const vacunaDto = new CrearVacunaDto();
+    const vacunaDto = new ActualizarVacunaDto();
     vacunaDto.estadoId = 1;
 
     await this.vacunaRepository.actualizar(idVacuna, vacunaDto);
@@ -56,7 +56,7 @@ export class VacunaService extends BaseService {
       throw new NotFoundException(Messages.EXCEPTION_NOT_FOUND);
     }
 
-    const vacunaDto = new CrearVacunaDto();
+    const vacunaDto = new ActualizarVacunaDto();
     vacunaDto.estadoId = 2;
 
     await this.vacunaRepository.actualizar(idVacuna, vacunaDto);

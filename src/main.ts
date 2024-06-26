@@ -5,46 +5,45 @@ import { printInfo, printLogo } from './core/logger';
 
 import packageJson from '../package.json';
 
-//import { MicroserviceOptions, Transport } from '@nestjs/microservices';
+import { MicroserviceOptions, Transport } from '@nestjs/microservices';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+// import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
-  /* const app = await NestFactory.createMicroservice<MicroserviceOptions>(
+  const app = await NestFactory.createMicroservice<MicroserviceOptions>(
     AppModule,
     {
-      transport: Transport.TCP,
+      transport: Transport.NATS,
       options: {
-        host: 'localhost',
-        port: Number(process.env.PORT || 3000),
+        servers: [process.env.NATS_SERVER || 'nats://localhost:4222'],
       },
     },
-  ); */
+  );
 
   //Restfull api
-  const app = await NestFactory.create(AppModule, {
-    logger: ['error', 'warn'],
-  });
+  // const app = await NestFactory.create(AppModule, {
+  //   logger: ['error', 'warn'],
+  // });
 
-  app.enableCors({
-    origin: true,
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
-    credentials: true,
-  });
-  
-  const options = new DocumentBuilder()
-    .setTitle('Vacunacion')
-    .setDescription('')
-    .setVersion('1.0')
-    .addBearerAuth()
-    .build();
+  // app.enableCors({
+  //   origin: true,
+  //   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+  //   credentials: true,
+  // });
 
-  const document = SwaggerModule.createDocument(app, options);
-  SwaggerModule.setup('api/docs', app, document);
+  // const options = new DocumentBuilder()
+  //   .setTitle('Vacunacion')
+  //   .setDescription('')
+  //   .setVersion('1.0')
+  //   .addBearerAuth()
+  //   .build();
+
+  // const document = SwaggerModule.createDocument(app, options);
+  // SwaggerModule.setup('api/docs', app, document);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
-  await app.listen(process.env.PORT || 3000);
+  await app.listen();
 
   printLogo();
   printInfo({
