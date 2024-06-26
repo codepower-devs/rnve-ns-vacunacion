@@ -5,6 +5,10 @@ import { Max } from 'class-validator';
 export class CrearEsquemaDto {
   @ApiProperty()
   @IsNumber()
+  programavacunacionId?: number;
+
+  @ApiProperty()
+  @IsNumber()
   vacunaId?: number;
 
   @ApiProperty({ example: '6 a 11 meses' })
@@ -71,10 +75,6 @@ export class CrearEsquemaDto {
   @ApiProperty({ example: '1' })
   @IsNumber()
   ordenDeDosis: number;
-
-  @ApiProperty({ example: 'true o false' })
-  @IsBoolean()
-  esEsquemaRegular: boolean;
 
   @ApiProperty({ example: '1 es activo, 2 es inactivo ' })
   @IsNumber()
