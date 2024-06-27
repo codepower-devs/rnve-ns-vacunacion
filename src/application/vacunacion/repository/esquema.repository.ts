@@ -5,37 +5,46 @@ import { CrearEsquemaDto } from '../dto/crear-esquema.dto';
 import { ActualizarEsquemaDto } from '../dto/actualizar-esquema.dto';
 import { PaginacionQueryDto } from '@/common/dto/paginacion-query.dto';
 import { Vacuna } from '../entity/vacuna.entity';
+import { programaVacunacion } from '../entity/programa_vacunacion.entity';
 
 @Injectable()
 export class EsquemaRepository {
   constructor(private dataSource: DataSource) {}
 
   async listar() {
-    return await this.dataSource
-      .getRepository(Esquema)
-      .createQueryBuilder('esquema')
-      .innerJoin('esquema.vacuna', 'vacuna')
-      .select([
-        'esquema.id',
-        'esquema.edadCondicion',
-        'esquema.periodoTiempoId',
-        'esquema.descripcionPeriodoTiempo',
-        'esquema.numeroDeDosis',
-        'esquema.cantidadDeDosis',
-        'esquema.viaLugarDeDosis',
-        'esquema.edadMinimaDias',
-        'esquema.edadMinimaMeses',
-        'esquema.edadMinimaAnios',
-        'esquema.edadMaximaDias',
-        'esquema.edadMaximaMeses',
-        'esquema.edadMaximaAnios',
-        'esquema.ordenDeDosis',
-        'esquema.esEsquemaRegular',
-        'esquema.estadoId',
-        'vacuna.vacuna',
-      ])
-      .where('esquema.estado_id = :estadoId', { estadoId: 1 })
-      .getMany();
+    try {
+      return await this.dataSource
+        .getRepository(Esquema)
+        .createQueryBuilder('esquema')
+        .innerJoin('esquema.vacuna', 'vacuna')
+        .innerJoin('esquema.programavacunacion', 'programavacunacion')
+        .select([
+          'esquema.id',
+          'esquema.edadCondicion',
+          'esquema.periodoTiempoId',
+          'esquema.descripcionPeriodoTiempo',
+          'esquema.numeroDeDosis',
+          'esquema.cantidadDeDosis',
+          'esquema.viaLugarDeDosis',
+          'esquema.edadMinimaDias',
+          'esquema.edadMinimaMeses',
+          'esquema.edadMinimaAnios',
+          'esquema.edadMaximaDias',
+          'esquema.edadMaximaMeses',
+          'esquema.edadMaximaAnios',
+          'esquema.ordenDeDosis',
+          'esquema.estadoId',
+          'vacuna.vacuna',
+          'programavacunacion.descripcion',
+          'programavacunacion.esEsquemaRegular',
+        ])
+        .andWhere('esquema.estado_id = :estadoId', { estadoId: 1 })
+        .andWhere('programavacunacion.estado_id = :estadoId', { estadoId: 1 })
+        .getMany();
+    } catch (error) {
+      console.error('Error listar esquema:', error);
+      throw new Error('No se pudo actualizar los datos');
+    }
   }
 
   async listarTodos(paginacionQueryDto: PaginacionQueryDto) {
@@ -44,6 +53,7 @@ export class EsquemaRepository {
       .getRepository(Esquema)
       .createQueryBuilder('esquema')
       .innerJoin('esquema.vacuna', 'vacuna')
+      .innerJoin('esquema.programavacunacion', 'programavacunacion')
       .select([
         'esquema.id',
         'esquema.edadCondicion',
@@ -59,9 +69,10 @@ export class EsquemaRepository {
         'esquema.edadMaximaMeses',
         'esquema.edadMaximaAnios',
         'esquema.ordenDeDosis',
-        'esquema.esEsquemaRegular',
         'esquema.estadoId',
         'vacuna.vacuna',
+        'programavacunacion.descripcion',
+        'programavacunacion.esEsquemaRegular',
       ])
       .take(limite)
       .skip(saltar);
@@ -83,7 +94,7 @@ export class EsquemaRepository {
           qb.orWhere('vacuna.vacuna ilike :filtro', {
             filtro: `%${filtro}%`,
           });
-          qb.orWhere('esquema.esEsquemaRegular ilike :filtro', {
+          qb.orWhere('programavacunacion.esEsquemaRegular ilike :filtro', {
             filtro: `${filtro}`,
           });
         }),
@@ -98,6 +109,7 @@ export class EsquemaRepository {
       .createQueryBuilder('esquema')
       .where({ id: id })
       .innerJoin('esquema.vacuna', 'vacuna')
+      .innerJoin('esquema.programavacunacion', 'programavacunacion')
       .select([
         'esquema.id',
         'esquema.edadCondicion',
@@ -113,10 +125,12 @@ export class EsquemaRepository {
         'esquema.edadMaximaMeses',
         'esquema.edadMaximaAnios',
         'esquema.ordenDeDosis',
-        'esquema.esEsquemaRegular',
         'esquema.estadoId',
         'vacuna.id',
         'vacuna.vacuna',
+        'programavacunacion.id',
+        'programavacunacion.descripcion',
+        'programavacunacion.esEsquemaRegular',
       ])
       .getOne();
   }
@@ -126,12 +140,16 @@ export class EsquemaRepository {
     const vacuna = new Vacuna();
     vacuna.id = esquemaDto.vacunaId;
 
+    const programavacunacion = new programaVacunacion();
+    programavacunacion.id = esquemaDto.programavacunacionId;
+
     const nuevoEsquema = new Esquema({
       ...esquemaDto,
       created_at: new Date(),
       estadoId: 1,
       usuarioId: 99,
       vacuna: vacuna,
+      programavacunacion: programavacunacion,
     });
 
     return await this.dataSource.getRepository(Esquema).save(nuevoEsquema);
@@ -141,11 +159,15 @@ export class EsquemaRepository {
     const vacuna = new Vacuna();
     vacuna.id = esquemaDto.vacunaId;
 
+    const programavacunacion = new programaVacunacion();
+    programavacunacion.id = esquemaDto.programavacunacionId;
+
     const datosActualizar = {
       ...esquemaDto,
       updated_at: new Date(),
       usuarioId: 100,
       vacuna: vacuna,
+      programavacunacion: programavacunacion,
     };
 
     return await this.dataSource

@@ -49,9 +49,10 @@ export class EsquemaService extends BaseService {
     }
 
     try {
-      const esquemaDto = new CrearEsquemaDto();
+      const esquemaDto = new ActualizarEsquemaDto();
       esquemaDto.estadoId = 1;
       esquemaDto.vacunaId = esquema.vacuna.id;
+      esquemaDto.programavacunacionId = esquema.programavacunacion.id;
       //console.log(esquemaDto);
       await this.esquemaRepository.actualizar(idEsquema, esquemaDto);
       return { id: idEsquema, estado_id: 1 };
@@ -71,6 +72,7 @@ export class EsquemaService extends BaseService {
       const esquemaDto = new ActualizarEsquemaDto();
       esquemaDto.estadoId = 2;
       esquemaDto.vacunaId = esquema.vacuna.id;
+      esquemaDto.programavacunacionId = esquema.programavacunacion.id;
       //console.log(esquemaDto);
       await this.esquemaRepository.actualizar(idEsquema, esquemaDto);
       return { id: idEsquema, estado_id: 2 };

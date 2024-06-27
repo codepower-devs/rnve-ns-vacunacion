@@ -8,9 +8,9 @@ import {
 
 import dotenv from 'dotenv';
 import { Vacuna } from './vacuna.entity';
+import { programaVacunacion } from './programa_vacunacion.entity';
 dotenv.config();
 
-//@Check(UtilService.buildStatusCheck(grupoeEtareoEstado))
 @Entity({ name: 'esquema', schema: process.env.DB_SCHEMA_VACUNACION })
 export class Esquema {
   @PrimaryGeneratedColumn({
@@ -117,14 +117,6 @@ export class Esquema {
   })
   ordenDeDosis: number;
 
-  @Column({
-    name: 'es_esquema_regular',
-    type: 'boolean',
-    default: true,
-    comment: 'Indica si el dosis corresponde a esquema regular (true/false)',
-  })
-  esEsquemaRegular: boolean = true;
-
   @Column({ type: 'timestamp', comment: 'Fecha de creacion del registro' })
   created_at: Date;
 
@@ -139,14 +131,13 @@ export class Esquema {
   @Column({
     name: 'usuario_id',
     type: 'integer',
-    comment: 'Estado del Esquema ',
+    comment: 'Identificador de usuario',
   })
   usuarioId: number;
 
   @Column({
     name: 'vacuna_id',
     type: 'integer',
-
     comment: 'Clave foránea que índica que pertenece a vacuna',
   })
   vacunaId?: number;
@@ -159,6 +150,22 @@ export class Esquema {
     },
   ])
   vacuna: Vacuna;
+
+  @Column({
+    name: 'programavacunacion_id',
+    type: 'integer',
+    comment: 'Clave foránea que índica que pertenece a programa de vacunacion',
+  })
+  programavacunacionId?: number;
+
+  @ManyToOne(() => programaVacunacion)
+  @JoinColumn([
+    {
+      name: 'programavacunacion_id',
+      foreignKeyConstraintName: 'fkey_programavacunacion',
+    },
+  ])
+  programavacunacion: programaVacunacion;
 
   @Column({
     name: 'estado_id',
