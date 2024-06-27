@@ -1,8 +1,12 @@
+import { IsNotEmpty, IsNumber, IsString } from '@/common/validation';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from '@/common/validation';
 import { Max } from 'class-validator';
 
 export class CrearEsquemaDto {
+  @ApiProperty()
+  @IsNumber()
+  programavacunacionId?: number;
+
   @ApiProperty()
   @IsNumber()
   vacunaId?: number;
@@ -71,10 +75,6 @@ export class CrearEsquemaDto {
   @ApiProperty({ example: '1' })
   @IsNumber()
   ordenDeDosis: number;
-
-  @ApiProperty({ example: 'true o false' })
-  @IsBoolean()
-  esEsquemaRegular: boolean;
 
   @ApiProperty({ example: '1 es activo, 2 es inactivo ' })
   @IsNumber()
