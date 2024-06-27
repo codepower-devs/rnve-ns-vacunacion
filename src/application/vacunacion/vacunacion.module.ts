@@ -14,12 +14,22 @@ import { EsquemaController } from './controller/esquema.controller';
 import { EsquemaService } from './service/esquema.service';
 import { EsquemaRepository } from './repository/esquema.repository';
 
+import { ProgramaVacunacionController } from './controller/programa-vacunacion.controller';
+import { ProgramaVacunacionService } from './service/programa-vacunacion.service';
+import { ProgramavacunacionRepository } from './repository/programa-vacunacion.repository';
+
 import { grupoEtareo } from './entity/grupo_etareo.entity';
 import { Vacuna } from './entity/vacuna.entity';
 import { Esquema } from './entity/esquema.entity';
+import { programaVacunacion } from './entity/programa_vacunacion.entity';
 
 @Module({
-  controllers: [GrupoetareoController, VacunaController, EsquemaController],
+  controllers: [
+    GrupoetareoController,
+    VacunaController,
+    EsquemaController,
+    ProgramaVacunacionController,
+  ],
   providers: [
     GrupoetareoService,
     GrupoetareoRepository,
@@ -27,7 +37,16 @@ import { Esquema } from './entity/esquema.entity';
     VacunaRepository,
     EsquemaService,
     EsquemaRepository,
+    ProgramaVacunacionService,
+    ProgramavacunacionRepository,
   ],
-  imports: [TypeOrmModule.forFeature([grupoEtareo, Vacuna, Esquema])],
+  imports: [
+    TypeOrmModule.forFeature([
+      grupoEtareo,
+      Vacuna,
+      Esquema,
+      programaVacunacion,
+    ]),
+  ],
 })
 export class VacunacionModule {}
