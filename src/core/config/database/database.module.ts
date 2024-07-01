@@ -19,13 +19,13 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         keepConnectionAlive: true,
         synchronize: true,
         autoLoadEntities: true,
-        logger: new SQLLogger({
+        /* logger: new SQLLogger({
           logger: LoggerService.getInstance(),
           level: {
             query: configService.get('LOG_SQL') === 'true',
             error: true,
           },
-        }),
+        }), */
       }),
     }),
   ],

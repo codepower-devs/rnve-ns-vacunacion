@@ -1,6 +1,6 @@
 import { Status } from '@/common/constants';
 /* Vacunacion */
-export const grupoeEtareoEstado = {
+export const GlobalsEstado = {
   ACTIVE: Status.ACTIVE,
   INACTIVE: Status.INACTIVE,
 };

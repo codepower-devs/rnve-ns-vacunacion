@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsNotEmpty, IsNumber, IsString } from '@/common/validation';
+import { IsNotEmpty, IsNumber, IsString } from '@/common/validation';
 import { Max } from 'class-validator';
 
 export class CrearEsquemaDto {
